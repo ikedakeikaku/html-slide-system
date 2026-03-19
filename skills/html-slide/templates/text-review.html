@@ -149,7 +149,7 @@
     .result-card {
       border-left: 5px solid var(--color-primary);
       background: var(--color-bg-subtle);
-      padding: 28px 32px;
+      padding: 20px 28px;
       border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
     }
 
@@ -158,10 +158,10 @@
     }
 
     .result-card__title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: var(--color-primary);
-      margin-bottom: var(--space-sm);
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -189,19 +189,19 @@
       background: var(--color-accent);
     }
 
-    .result-card__body {
-      font-size: 16px;
-      line-height: 1.8;
-      color: var(--color-text);
-      /* max ~100 chars per card */
-    }
-
     .result-card__body .metric {
-      font-size: 28px;
+      font-size: 48px;
       font-weight: 800;
       color: var(--color-primary);
       display: block;
-      margin: 8px 0;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .result-card__body .result-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--color-text);
     }
 
     .result-card--accent .result-card__body .metric {
@@ -297,9 +297,8 @@
               売上収益
             </div>
             <div class="result-card__body">
-              <span class="metric">142億円（YoY +22%）</span>
-              マーケティング効率改善とテイクレート上昇により、
-              売上収益は過去最高を更新
+              <span class="metric">142億円</span>
+              <p class="result-desc">YoY +22%｜マーケティング効率改善により過去最高を更新</p>
             </div>
           </div>
 
@@ -310,9 +309,8 @@
               コア営業利益
             </div>
             <div class="result-card__body">
-              <span class="metric">27億円（YoY +125%）</span>
-              収益性の改善が継続。利益率は前年同期の
-              7.8%から12.2%に大幅改善
+              <span class="metric">27億円</span>
+              <p class="result-desc">YoY +125%｜利益率は7.8%から12.2%に大幅改善</p>
             </div>
           </div>
 
@@ -323,9 +321,8 @@
               課題: MAU成長の鈍化
             </div>
             <div class="result-card__body">
-              <span class="metric">MAU 2,280万（YoY +2%）</span>
-              新規ユーザー獲得コスト上昇により、
-              MAU成長はYoY +2%にとどまる
+              <span class="metric">2,280万</span>
+              <p class="result-desc">YoY +2%｜新規獲得コスト上昇でMAU成長鈍化</p>
             </div>
           </div>
 
@@ -336,9 +333,8 @@
               GMV
             </div>
             <div class="result-card__body">
-              <span class="metric">3,291億円（YoY +8%）</span>
-              出品数の増加と購入単価の上昇が
-              GMV成長をけん引
+              <span class="metric">3,291億円</span>
+              <p class="result-desc">YoY +8%｜出品数増加と購入単価上昇がけん引</p>
             </div>
           </div>
 
