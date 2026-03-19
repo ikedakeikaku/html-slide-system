@@ -1,0 +1,122 @@
+{
+  "version": "2.0",
+  "description": "HTML Slide QA Checklist — automated scoring criteria",
+  "checks": [
+    {
+      "id": "A1",
+      "name": "A1_no_overflow",
+      "category": "structure",
+      "description": "All elements within slide bounds (1920x1080)",
+      "method": "getBoundingClientRect comparison",
+      "severity": "critical"
+    },
+    {
+      "id": "A2",
+      "name": "A2_no_text_overlap",
+      "category": "structure",
+      "description": "No text elements overlap each other",
+      "method": "Pairwise bounding rect overlap detection",
+      "severity": "critical"
+    },
+    {
+      "id": "A3",
+      "name": "A3_font_min_14px",
+      "category": "structure",
+      "description": "All text >= 14px (except footnotes in .slide-footer__notes)",
+      "method": "computed fontSize check",
+      "severity": "major"
+    },
+    {
+      "id": "A4",
+      "name": "A4_navigation_works",
+      "category": "structure",
+      "description": "Keyboard navigation (ArrowRight/ArrowLeft) transitions slides",
+      "method": "Programmatic keydown dispatch + active class check",
+      "severity": "critical",
+      "note": "Requires Puppeteer — not in browser-only qa-runner"
+    },
+    {
+      "id": "B1",
+      "name": "B1_padding_100px",
+      "category": "design",
+      "description": "Slide left/right padding >= 100px",
+      "method": "computed paddingLeft/paddingRight",
+      "severity": "major"
+    },
+    {
+      "id": "B2",
+      "name": "B2_title_gap_40px",
+      "category": "design",
+      "description": "Gap between slide header and next content >= 40px",
+      "method": "getBoundingClientRect gap calculation",
+      "severity": "minor"
+    },
+    {
+      "id": "B3",
+      "name": "B3_has_visual",
+      "category": "design",
+      "description": "Each slide has at least one visual element (img/svg/canvas/table/kpi-card/chart/etc)",
+      "method": "querySelector for visual selectors",
+      "severity": "major"
+    },
+    {
+      "id": "B4",
+      "name": "B4_no_3_consecutive_same",
+      "category": "design",
+      "description": "No 3+ consecutive slides with the same layout pattern",
+      "method": "DOM structure hash comparison",
+      "severity": "minor"
+    },
+    {
+      "id": "B5",
+      "name": "B5_color_palette",
+      "category": "design",
+      "description": "Used colors stay within theme palette (primary, accent, bg, text, muted, border)",
+      "method": "Color extraction + theme variable comparison",
+      "severity": "minor",
+      "note": "Complex — future implementation"
+    },
+    {
+      "id": "C1",
+      "name": "C1_kpi_font_48px",
+      "category": "content",
+      "description": "KPI numbers (.kpi-number, .metric) are >= 48px",
+      "method": "computed fontSize on KPI selectors",
+      "severity": "major"
+    },
+    {
+      "id": "C2",
+      "name": "C2_chart_datalabels",
+      "category": "content",
+      "description": "Charts have visible data labels",
+      "method": "chartjs-plugin-datalabels registration check",
+      "severity": "minor",
+      "note": "Requires Chart.js inspection — future implementation"
+    },
+    {
+      "id": "C3",
+      "name": "C3_data_has_footnote",
+      "category": "content",
+      "description": "Data slides (with table/chart/KPI) have footnotes",
+      "method": ".slide-footer__notes text length check",
+      "severity": "minor"
+    },
+    {
+      "id": "C4",
+      "name": "C4_has_page_number",
+      "category": "content",
+      "description": "All content slides have page numbers (title/divider exempt)",
+      "method": ".slide-footer__page element presence",
+      "severity": "minor"
+    }
+  ],
+  "scoring": {
+    "pass_threshold": 95,
+    "consecutive_passes_to_complete": 3,
+    "weights": {
+      "critical": 3,
+      "major": 2,
+      "minor": 1
+    }
+  }
+}
