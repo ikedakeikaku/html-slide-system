@@ -560,6 +560,164 @@ function generateClosing(data, slideIndex) {
     </section>`;
 }
 
+// ===== Seminar template generators (8 additional) =====
+
+function generateStatement(data, slideIndex) {
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <div class="statement-layout" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;position:relative;">
+        <svg style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.15;pointer-events:none;" width="600" height="600" viewBox="0 0 600 600">
+          <circle cx="300" cy="300" r="280" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-dasharray="8 12"/>
+          <circle cx="300" cy="300" r="200" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-dasharray="4 8"/>
+        </svg>
+        <div style="width:80px;height:5px;background:var(--color-primary);border-radius:3px;margin-bottom:48px;"></div>
+        <h1 style="font-size:80px;font-weight:800;line-height:1.3;max-width:1400px;margin-bottom:40px;">${data.statement || ''}</h1>
+        <p style="font-size:24px;color:var(--color-text-muted);line-height:1.6;max-width:900px;">${escHtml(data.subtitle || '')}</p>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote || '')}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateBeforeAfter(data, slideIndex) {
+  function items(arr, type) {
+    return (arr || []).map(item => {
+      var iconCls = type === 'before' ? 'background:var(--color-accent-light);color:var(--color-accent);' : 'background:var(--color-primary-light);color:var(--color-primary);';
+      var icon = type === 'before' ? '&#x2717;' : '&#x2713;';
+      return `<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;"><div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;${iconCls}">${icon}</div><div><div style="font-weight:700;font-size:18px;margin-bottom:4px;">${escHtml(item.title)}</div><div style="font-size:15px;color:var(--color-text-muted);line-height:1.6;">${escHtml(item.desc)}</div></div></div>`;
+    }).join('');
+  }
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="display:grid;grid-template-columns:1fr 80px 1fr;align-items:stretch;">
+        <div style="background:var(--color-bg-subtle);border-radius:12px;padding:40px 36px;display:flex;flex-direction:column;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;padding:8px 28px;border-radius:999px;font-weight:700;font-size:16px;margin-bottom:28px;align-self:flex-start;background:var(--color-text-muted);color:white;">Before</span>
+          ${items(data.before_items, 'before')}
+          ${data.before_metric ? `<div style="margin-top:auto;padding-top:24px;border-top:2px solid var(--color-border);text-align:center;"><span style="font-size:48px;font-weight:800;color:var(--color-text-muted);display:block;line-height:1.2;">${escHtml(data.before_metric)}</span><div style="font-size:15px;color:var(--color-text-muted);margin-top:4px;">${escHtml(data.metric_label || '')}</div></div>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 48 48" width="48" height="48" fill="none"><path d="M16 24h16m0 0l-6-6m6 6l-6 6" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="background:var(--color-primary-light);border:2px solid var(--color-primary);border-radius:12px;padding:40px 36px;display:flex;flex-direction:column;">
+          <span style="display:inline-flex;align-items:center;justify-content:center;padding:8px 28px;border-radius:999px;font-weight:700;font-size:16px;margin-bottom:28px;align-self:flex-start;background:var(--color-primary);color:white;">After</span>
+          ${items(data.after_items, 'after')}
+          ${data.after_metric ? `<div style="margin-top:auto;padding-top:24px;border-top:2px solid var(--color-border);text-align:center;"><span style="font-size:48px;font-weight:800;color:var(--color-primary);display:block;line-height:1.2;">${escHtml(data.after_metric)}</span><div style="font-size:15px;color:var(--color-text-muted);margin-top:4px;">${escHtml(data.metric_label || '')}</div></div>` : ''}
+        </div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateSteps(data, slideIndex) {
+  const steps = (data.steps || []).map((step, idx, arr) => {
+    const isLast = idx === arr.length - 1;
+    const iconColor = isLast ? 'var(--color-accent)' : 'var(--color-primary)';
+    const arrow = idx < arr.length - 1 ? `<div style="display:flex;align-items:center;padding-top:28px;"><svg viewBox="0 0 32 32" width="32" height="32" fill="none"><path d="M8 16h16m0 0l-5-5m5 5l-5 5" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` : '';
+    return `<div style="flex:1;text-align:center;"><div style="width:80px;height:80px;border-radius:50%;background:${iconColor};color:white;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;margin:0 auto 24px;position:relative;z-index:2;">${idx+1}</div><div style="font-size:20px;font-weight:700;margin-bottom:12px;">${escHtml(step.title)}</div><div style="font-size:15px;color:var(--color-text-muted);line-height:1.6;padding:0 20px;">${escHtml(step.desc)}</div>${step.detail ? `<div style="margin-top:16px;padding:12px 20px;background:var(--color-bg-subtle);border-radius:8px;margin-left:20px;margin-right:20px;"><div style="font-size:13px;color:var(--color-text-muted);margin-bottom:4px;">${escHtml(step.detail_label||'')}</div><div style="font-size:18px;font-weight:700;color:var(--color-primary);">${escHtml(step.detail)}</div></div>` : ''}</div>${arrow}`;
+  }).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="display:flex;align-items:flex-start;gap:0;margin-top:24px;">${steps}</div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateQuote(data, slideIndex) {
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;padding:40px 80px;">
+        <div style="font-size:120px;line-height:1;color:var(--color-primary);opacity:0.2;font-family:Georgia,serif;margin-bottom:8px;">"</div>
+        <p style="font-size:32px;font-weight:600;line-height:1.7;text-align:center;max-width:1200px;margin-bottom:40px;">${escHtml(data.quote)}</p>
+        <div style="width:60px;height:3px;background:var(--color-primary);border-radius:2px;margin-bottom:32px;"></div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 32 32" width="32" height="32" fill="none"><circle cx="16" cy="12" r="6" fill="var(--color-primary)"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" fill="var(--color-primary)" opacity="0.3"/></svg>
+          </div>
+          <div style="text-align:left;"><div style="font-size:20px;font-weight:700;">${escHtml(data.source_name)}</div><div style="font-size:16px;color:var(--color-text-muted);margin-top:4px;">${escHtml(data.source_role)}</div></div>
+        </div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateImageFull(data, slideIndex) {
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="border-radius:12px;overflow:hidden;height:560px;">
+        ${data.image_url ? `<img src="${escHtml(data.image_url)}" style="width:100%;height:100%;object-fit:cover;" alt="${escHtml(data.image_alt||'')}">` :
+        `<div style="width:100%;height:100%;background:linear-gradient(135deg,#E8EEFF 0%,#F0F4FF 30%,#E8EEFF 60%,#D6E2FF 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+          <svg viewBox="0 0 80 80" width="80" height="80" fill="none"><rect x="4" y="12" width="72" height="52" rx="4" stroke="var(--color-primary)" stroke-width="2.5"/><circle cx="28" cy="32" r="8" fill="var(--color-primary)" opacity="0.3"/><path d="M4 52l20-16 12 10 16-20 24 26" stroke="var(--color-primary)" stroke-width="2" fill="none"/></svg>
+          <span style="font-size:16px;color:var(--color-text-muted);opacity:0.6;">${escHtml(data.placeholder_text || '画像をここに配置')}</span>
+        </div>`}
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:24px;margin-top:20px;padding:20px 28px;background:var(--color-bg-subtle);border-radius:8px;border-left:4px solid var(--color-primary);">
+        <div><div style="font-size:18px;font-weight:700;margin-bottom:4px;">${escHtml(data.caption_title)}</div><div style="font-size:15px;color:var(--color-text-muted);line-height:1.6;">${escHtml(data.caption_text)}</div></div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateQuestion(data, slideIndex) {
+  const stats = (data.stats || []).map(s =>
+    `<div style="text-align:center;"><span style="font-size:48px;font-weight:800;color:var(--color-accent);display:block;line-height:1.1;">${escHtml(s.number)}</span><div style="font-size:15px;color:var(--color-text-muted);margin-top:8px;">${escHtml(s.label)}</div></div>`
+  ).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;position:relative;">
+        <div style="margin-bottom:32px;">
+          <svg viewBox="0 0 80 80" width="80" height="80" fill="none"><circle cx="40" cy="40" r="36" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2"/><text x="40" y="52" text-anchor="middle" font-size="40" font-weight="800" fill="var(--color-primary)" font-family="system-ui">?</text></svg>
+        </div>
+        <h1 style="font-size:52px;font-weight:800;line-height:1.4;max-width:1200px;margin-bottom:40px;">${data.question || ''}</h1>
+        <p style="font-size:20px;color:var(--color-text-muted);line-height:1.7;max-width:900px;">${escHtml(data.context || '')}</p>
+        ${stats ? `<div style="display:flex;gap:64px;margin-top:48px;">${stats}</div>` : ''}
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateChecklist(data, slideIndex) {
+  const items = (data.items || []).map(item => {
+    const done = item.done;
+    const borderColor = done ? '#22C55E' : 'var(--color-primary)';
+    const check = done
+      ? `<div style="width:32px;height:32px;border-radius:6px;background:#22C55E;color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 18 18" width="18" height="18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`
+      : `<div style="width:32px;height:32px;border-radius:6px;background:white;border:2px solid var(--color-border);flex-shrink:0;"></div>`;
+    return `<div style="display:flex;align-items:flex-start;gap:16px;padding:20px 24px;background:var(--color-bg-subtle);border-radius:8px;border-left:4px solid ${borderColor};">${check}<div><div style="font-size:18px;font-weight:700;margin-bottom:4px;">${escHtml(item.title)}</div><div style="font-size:14px;color:var(--color-text-muted);line-height:1.5;">${escHtml(item.desc)}</div></div></div>`;
+  }).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 48px;">${items}</div>
+      ${data.summary ? `<div style="margin-top:32px;padding:20px 28px;background:var(--color-primary-light);border-radius:12px;display:flex;align-items:center;gap:24px;"><svg viewBox="0 0 40 40" width="40" height="40" fill="none"><circle cx="20" cy="20" r="18" fill="var(--color-primary)" opacity="0.15"/><path d="M14 20l4 4 8-8" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div style="font-size:17px;line-height:1.6;">${escHtml(data.summary)}</div></div>` : ''}
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateCta(data, slideIndex) {
+  const contacts = (data.contacts || []).map(c =>
+    `<div style="display:flex;align-items:center;gap:16px;padding:16px 24px;background:var(--color-bg-subtle);border-radius:8px;"><div style="width:44px;height:44px;border-radius:50%;background:var(--color-primary-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 22 22" width="22" height="22" fill="none"><circle cx="11" cy="11" r="9" stroke="var(--color-primary)" stroke-width="1.8"/></svg></div><div><div style="font-size:14px;color:var(--color-text-muted);">${escHtml(c.label)}</div><div style="font-size:20px;font-weight:700;color:var(--color-primary);">${escHtml(c.value)}</div></div></div>`
+  ).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+        <div style="display:flex;flex-direction:column;gap:32px;">
+          <p style="font-size:28px;font-weight:700;line-height:1.5;">${escHtml(data.message)}</p>
+          <div style="display:flex;flex-direction:column;gap:20px;">${contacts}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:24px;">
+          <div style="width:280px;height:280px;background:white;border:2px solid var(--color-border);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:20px;">
+            <svg viewBox="0 0 200 200" width="200" height="200" fill="var(--color-text)"><rect x="20" y="20" width="60" height="60" rx="4" fill="none" stroke="currentColor" stroke-width="6"/><rect x="36" y="36" width="28" height="28" rx="2"/><rect x="120" y="20" width="60" height="60" rx="4" fill="none" stroke="currentColor" stroke-width="6"/><rect x="136" y="36" width="28" height="28" rx="2"/><rect x="20" y="120" width="60" height="60" rx="4" fill="none" stroke="currentColor" stroke-width="6"/><rect x="36" y="136" width="28" height="28" rx="2"/><rect x="90" y="90" width="20" height="20" rx="2"/><rect x="120" y="120" width="16" height="16" rx="1"/><rect x="148" y="120" width="16" height="16" rx="1"/><rect x="120" y="148" width="16" height="16" rx="1"/><rect x="148" y="148" width="16" height="16" rx="1"/></svg>
+          </div>
+          <div style="font-size:16px;color:var(--color-text-muted);text-align:center;">${escHtml(data.qr_label || 'QRコードから資料ダウンロード')}</div>
+          ${data.url ? `<div style="display:inline-block;padding:14px 36px;background:var(--color-primary);color:white;border-radius:999px;font-size:20px;font-weight:700;">${escHtml(data.url)}</div>` : ''}
+        </div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote || '')}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
 // ===== Template dispatcher =====
 const generators = {
   'title-gradient': generateTitleGradient,
@@ -583,6 +741,14 @@ const generators = {
   'flow-diagram': generateFlowDiagram,
   'timeline': generateTimeline,
   'closing': generateClosing,
+  'statement': generateStatement,
+  'before-after': generateBeforeAfter,
+  'steps': generateSteps,
+  'quote': generateQuote,
+  'image-full': generateImageFull,
+  'question': generateQuestion,
+  'checklist': generateChecklist,
+  'cta': generateCta,
 };
 
 const chartTemplates = {

@@ -24,6 +24,14 @@ const TEMPLATES = [
   'flow-diagram.html',
   'timeline.html',
   'closing.html',
+  'statement.html',
+  'before-after.html',
+  'steps.html',
+  'quote.html',
+  'image-full.html',
+  'question.html',
+  'checklist.html',
+  'cta.html',
 ];
 
 const TEMPLATE_DIR = path.join(__dirname, '.claude/skills/html-slide/templates');

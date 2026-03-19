@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Before After Template</title>
+  <style>
+    :root {
+      --color-primary: #0652DD;
+      --color-primary-light: #E8EEFF;
+      --color-primary-dark: #003BB5;
+      --color-accent: #FF4757;
+      --color-accent-light: #FFE8EA;
+      --color-bg: #FFFFFF;
+      --color-bg-subtle: #F8F9FA;
+      --color-text: #1A1A1A;
+      --color-text-muted: #6B7280;
+      --color-border: #E5E7EB;
+      --font-heading: "Noto Sans JP", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --font-body: "Noto Sans JP", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", monospace;
+      --slide-width: 1920px;
+      --slide-height: 1080px;
+      --slide-padding: 120px;
+      --slide-padding-top: 100px;
+      --space-xs: 8px; --space-sm: 16px; --space-md: 24px; --space-lg: 40px; --space-xl: 64px;
+      --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 999px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; width: 100%; height: 100%; background: #000; }
+    .slides-container { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+    .slide {
+      width: var(--slide-width); height: var(--slide-height);
+      padding: var(--slide-padding-top) var(--slide-padding) var(--slide-padding);
+      position: absolute; top: 0; left: 0; background: var(--color-bg);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+      transform-origin: top left; overflow: hidden;
+      font-family: var(--font-body); color: var(--color-text);
+    }
+    .slide.active { opacity: 1; pointer-events: auto; z-index: 1; }
+
+    .slide-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-lg); }
+    .slide-header__left { display: flex; align-items: center; gap: var(--space-sm); }
+    .section-badge { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; background: var(--color-primary); color: white; font-weight: 700; font-size: 20px; border-radius: var(--radius-sm); flex-shrink: 0; }
+    .slide-title { font-family: var(--font-heading); font-size: 36px; font-weight: 800; color: var(--color-text); line-height: 1.3; }
+
+    /* ===== Before/After Layout ===== */
+    .ba-grid {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 0;
+      align-items: stretch;
+      flex: 1;
+    }
+
+    .ba-panel {
+      background: var(--color-bg-subtle);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ba-panel--after {
+      background: var(--color-primary-light);
+      border: 2px solid var(--color-primary);
+    }
+
+    .ba-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 28px;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 28px;
+      align-self: flex-start;
+    }
+
+    .ba-label--before {
+      background: var(--color-text-muted);
+      color: white;
+    }
+
+    .ba-label--after {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .ba-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .ba-item__icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ba-item__icon--before { background: var(--color-accent-light); color: var(--color-accent); }
+    .ba-item__icon--after { background: var(--color-primary-light); color: var(--color-primary); }
+
+    .ba-item__title { font-weight: 700; font-size: 18px; margin-bottom: 4px; }
+    .ba-item__desc { font-size: 15px; color: var(--color-text-muted); line-height: 1.6; }
+
+    .ba-metric {
+      margin-top: auto;
+      padding-top: 24px;
+      border-top: 2px solid var(--color-border);
+      text-align: center;
+    }
+
+    .ba-metric__number {
+      font-size: 48px;
+      font-weight: 800;
+      display: block;
+      line-height: 1.2;
+    }
+
+    .ba-metric__number--before { color: var(--color-text-muted); }
+    .ba-metric__number--after { color: var(--color-primary); }
+
+    .ba-metric__label { font-size: 15px; color: var(--color-text-muted); margin-top: 4px; }
+
+    .ba-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ba-arrow svg { width: 48px; height: 48px; }
+
+    .slide-footer { position: absolute; bottom: 36px; left: var(--slide-padding); right: var(--slide-padding); display: flex; justify-content: space-between; align-items: flex-end; }
+    .slide-footer__notes { font-size: 11px; color: var(--color-text-muted); max-width: 80%; line-height: 1.5; }
+    .slide-footer__page { font-size: 14px; color: var(--color-text-muted); }
+
+    .slide-nav { position: fixed; bottom: 20px; right: 20px; display: flex; align-items: center; gap: 8px; z-index: 100; background: rgba(0,0,0,0.6); padding: 8px 16px; border-radius: var(--radius-pill); opacity: 0; transition: opacity 0.3s; }
+    .slide-nav:hover { opacity: 1; }
+    .slide-nav button { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 4px 8px; }
+    .slide-counter { color: white; font-size: 14px; font-family: var(--font-mono); }
+    .progress-bar { position: fixed; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(0,0,0,0.1); z-index: 100; }
+    .progress-bar__fill { height: 100%; background: var(--color-primary); transition: width 0.3s ease; width: 0%; }
+
+    @media print {
+      .slide-nav, .progress-bar { display: none !important; }
+      body { background: white; }
+      .slides-container { display: block; overflow: visible; }
+      .slide { position: relative !important; opacity: 1 !important; transform: none !important; pointer-events: auto; width: 100%; height: auto; aspect-ratio: 16/9; page-break-after: always; }
+      @page { size: 1920px 1080px; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="slide-nav">
+    <span class="slide-counter"><span id="current">1</span> / <span id="total">1</span></span>
+    <button onclick="prevSlide()" aria-label="Previous">&#8249;</button>
+    <button onclick="nextSlide()" aria-label="Next">&#8250;</button>
+    <button onclick="toggleFullscreen()" aria-label="Fullscreen">&#x26F6;</button>
+  </nav>
+  <div class="progress-bar"><div class="progress-bar__fill" id="progress"></div></div>
+
+  <div class="slides-container">
+
+    <section class="slide active" id="slide-1">
+      <header class="slide-header">
+        <div class="slide-header__left">
+          <span class="section-badge">2</span>
+          <h1 class="slide-title">DX推進による業務改革の成果</h1>
+        </div>
+      </header>
+
+      <div class="ba-grid">
+        <div class="ba-panel">
+          <span class="ba-label ba-label--before">Before</span>
+          <div class="ba-item">
+            <div class="ba-item__icon ba-item__icon--before">&#x2717;</div>
+            <div><div class="ba-item__title">手動でのデータ集計</div><div class="ba-item__desc">各部門がExcelで個別に集計。月次レポート作成に3営業日を要していた。</div></div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-item__icon ba-item__icon--before">&#x2717;</div>
+            <div><div class="ba-item__title">属人的な承認フロー</div><div class="ba-item__desc">紙ベースの承認プロセス。承認漏れや遅延が頻発していた。</div></div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-item__icon ba-item__icon--before">&#x2717;</div>
+            <div><div class="ba-item__title">情報のサイロ化</div><div class="ba-item__desc">部門間でのデータ共有が困難。意思決定に必要な情報の収集に時間を要した。</div></div>
+          </div>
+          <div class="ba-metric">
+            <span class="ba-metric__number ba-metric__number--before">72時間</span>
+            <div class="ba-metric__label">月次レポート作成時間</div>
+          </div>
+        </div>
+
+        <div class="ba-arrow">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M16 24h16m0 0l-6-6m6 6l-6 6" stroke="var(--color-primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+
+        <div class="ba-panel ba-panel--after">
+          <span class="ba-label ba-label--after">After</span>
+          <div class="ba-item">
+            <div class="ba-item__icon ba-item__icon--after">&#x2713;</div>
+            <div><div class="ba-item__title">リアルタイムダッシュボード</div><div class="ba-item__desc">全社データを統合したBIダッシュボードにより、いつでも最新データを確認可能に。</div></div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-item__icon ba-item__icon--after">&#x2713;</div>
+            <div><div class="ba-item__title">デジタル承認ワークフロー</div><div class="ba-item__desc">Slack連携の自動承認システム。平均承認時間を75%短縮。</div></div>
+          </div>
+          <div class="ba-item">
+            <div class="ba-item__icon ba-item__icon--after">&#x2713;</div>
+            <div><div class="ba-item__title">統合データプラットフォーム</div><div class="ba-item__desc">データレイクへの一元化。全部門がセルフサービスでデータ分析を実施。</div></div>
+          </div>
+          <div class="ba-metric">
+            <span class="ba-metric__number ba-metric__number--after">4時間</span>
+            <div class="ba-metric__label">月次レポート作成時間</div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <div class="slide-footer__notes"><p>1. 2025年4月時点の実績値。レポート作成時間は経営企画部での計測結果。</p></div>
+        <div class="slide-footer__page">8</div>
+      </footer>
+    </section>
+
+  </div>
+
+  <script>
+    (function() {
+      var slides = document.querySelectorAll('.slide'), total = slides.length, current = 0;
+      var currentEl = document.getElementById('current'), totalEl = document.getElementById('total'), progressEl = document.getElementById('progress');
+      if (totalEl) totalEl.textContent = total;
+      function goTo(i) { if (i<0||i>=total) return; slides[current].classList.remove('active'); current=i; slides[current].classList.add('active'); if (currentEl) currentEl.textContent=current+1; if (progressEl) progressEl.style.width=((current+1)/total*100)+'%'; }
+      function next() { goTo(current+1); } function prev() { goTo(current-1); }
+      document.addEventListener('keydown', function(e) { switch(e.key) { case 'ArrowRight': case ' ': e.preventDefault(); next(); break; case 'ArrowLeft': e.preventDefault(); prev(); break; } });
+      function updateScale() { var s=Math.min(innerWidth/1920,innerHeight/1080),ox=(innerWidth-1920*s)/2,oy=(innerHeight-1080*s)/2; slides.forEach(function(sl){sl.style.transform='translate('+ox+'px,'+oy+'px) scale('+s+')';}); }
+      window.addEventListener('load', function() { updateScale(); }); window.addEventListener('resize', updateScale);
+      window.prevSlide=prev; window.nextSlide=next; window.toggleFullscreen=function(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();};
+    })();
+  </script>
+</body>
+</html>
