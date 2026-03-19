@@ -4,10 +4,26 @@ const fs = require('fs');
 
 const TEMPLATES = [
   'title-gradient.html',
+  'title-image.html',
+  'title-minimal.html',
+  'toc.html',
+  'section-divider.html',
   'kpi-3col.html',
+  'kpi-2col.html',
+  'kpi-highlight.html',
   'chart-bar-dual.html',
+  'chart-bar-single.html',
+  'chart-stacked.html',
+  'chart-line.html',
+  'chart-pie.html',
   'table-comparison.html',
+  'table-data.html',
   'text-review.html',
+  'text-2col.html',
+  'text-bullet.html',
+  'flow-diagram.html',
+  'timeline.html',
+  'closing.html',
 ];
 
 const TEMPLATE_DIR = path.join(__dirname, '.claude/skills/html-slide/templates');
@@ -110,9 +126,15 @@ const SCREENSHOT_DIR = path.join(__dirname, 'screenshots');
         // B3: has visual
         const hasVisual = !!slide.querySelector(
           'img, svg, canvas, .kpi-card, .kpi-grid, table, .data-table, .gradient-art, ' +
-          '.review-results, .result-card, .revision-indicator, .chart-grid-2col'
+          '.review-results, .result-card, .revision-indicator, .chart-grid-2col, ' +
+          '.chart-panel, .toc-list, .toc-badge, .comparison-grid, .bullet-visual, ' +
+          '.flow-diagram, .timeline, .closing-cards, .highlight-card, .highlight-number'
         );
-        const isTitle = slide.classList.contains('slide--title');
+        const isTitle = slide.classList.contains('slide--title') ||
+          slide.classList.contains('slide--title-image') ||
+          slide.classList.contains('slide--title-minimal') ||
+          slide.classList.contains('slide--section') ||
+          slide.classList.contains('slide--closing');
         results.push({ slide: i+1, check: 'B3_has_visual', pass: hasVisual || isTitle });
 
         // C1: KPI font >= 48px
