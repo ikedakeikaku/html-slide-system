@@ -108,6 +108,14 @@
       "description": "All content slides have page numbers (title/divider exempt)",
       "method": ".slide-footer__page element presence",
       "severity": "minor"
+    },
+    {
+      "id": "C5",
+      "name": "C5_no_literal_escape",
+      "category": "content",
+      "description": "No literal escape sequences (\\n, \\t) rendered as visible text",
+      "method": "Scan all visible text nodes for literal backslash-n/t patterns",
+      "severity": "major"
     }
   ],
   "scoring": {

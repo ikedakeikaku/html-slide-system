@@ -127,10 +127,22 @@ function generateChartBarDual(data, slideIndex) {
     </section>`;
 }
 
+function chartLabelsToJs(labels) {
+  // Chart.js uses array labels for multi-line: ["1Q","FY24"] renders as 2 lines
+  // Convert "1Q\\nFY24" → ["1Q","FY24"], keep simple labels as strings
+  const processed = (labels || []).map(function(lbl) {
+    if (typeof lbl === 'string' && lbl.includes('\\n')) {
+      return lbl.split('\\n');
+    }
+    return lbl;
+  });
+  return JSON.stringify(processed);
+}
+
 function generateChartScript(data, slideIndex) {
-  const leftLabels = JSON.stringify(data.left_labels || []);
+  const leftLabels = chartLabelsToJs(data.left_labels);
   const leftData = JSON.stringify(data.left_data || []);
-  const rightLabels = JSON.stringify(data.right_labels || []);
+  const rightLabels = chartLabelsToJs(data.right_labels);
   const rightData = JSON.stringify(data.right_data || []);
   const chartId = `chart-${slideIndex}`;
 

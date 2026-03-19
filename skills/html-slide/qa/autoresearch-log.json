@@ -1,5 +1,31 @@
 {
-  "autoresearch_log": [],
+  "autoresearch_log": [
+    {
+      "round": 1,
+      "timestamp": "2026-03-19T13:15:00.000Z",
+      "baseline_score": 100,
+      "baseline_note": "DOM-based QA scored 100%, but visual inspection of Puppeteer screenshots revealed Chart.js X-axis labels rendering literal '\\n' instead of line breaks",
+      "target_check": "visual_chart_labels",
+      "discovery_method": "Manual screenshot review of all 15 slides (3 decks × 5 slides)",
+      "change": {
+        "file": "build-slides.js",
+        "function": "generateChartScript",
+        "before": "JSON.stringify(data.left_labels) — passes literal '1Q\\nFY24' string to Chart.js",
+        "after": "chartLabelsToJs() — splits '\\n' labels into arrays ['1Q','FY24'] for Chart.js multi-line rendering"
+      },
+      "new_score": 100,
+      "visual_improvement": true,
+      "kept": true,
+      "reasoning": "Chart.js renders string labels as-is but interprets array labels as multi-line. The build script was passing '1Q\\nFY24' as a single string, which rendered the literal backslash-n. New chartLabelsToJs() helper splits on \\n to produce arrays.",
+      "side_effects": {
+        "added": "C5_no_literal_escape check to checklist.json (detects literal escape sequences in DOM text — note: cannot detect canvas-rendered text)",
+        "updated": "full-qa.js with C5 check implementation"
+      }
+    }
+  ],
   "baseline_score": 100,
-  "baseline_timestamp": "2026-03-19T12:50:17.517Z"
+  "baseline_timestamp": "2026-03-19T12:50:17.517Z",
+  "current_score": 100,
+  "visual_issues_resolved": 1,
+  "total_rounds": 1
 }
