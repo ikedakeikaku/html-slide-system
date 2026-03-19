@@ -10,7 +10,7 @@ const TEMPLATES = [
   'text-review.html',
 ];
 
-const TEMPLATE_DIR = path.join(__dirname, 'skills/html-slide/templates');
+const TEMPLATE_DIR = path.join(__dirname, '.claude/skills/html-slide/templates');
 const SCREENSHOT_DIR = path.join(__dirname, 'screenshots');
 
 (async () => {

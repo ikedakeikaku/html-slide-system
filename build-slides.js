@@ -5,7 +5,7 @@
  *   node build-slides.js <test-input.json> <output.html>
  *
  * Example:
- *   node build-slides.js skills/html-slide/test-inputs/ir-presentation.json output/ir.html
+ *   node build-slides.js .claude/.claude/skills/html-slide/test-inputs/ir-presentation.json output/ir.html
  */
 'use strict';
 
@@ -309,17 +309,17 @@ input.slides.forEach(function(slide, i) {
 
 // ===== Read design-system CSS =====
 const designCSS = fs.readFileSync(
-  path.join(__dirname, 'skills/html-slide/design-system.css'), 'utf8'
+  path.join(__dirname, '.claude/skills/html-slide/design-system.css'), 'utf8'
 );
 
 // ===== Read navigation JS =====
 const navJS = fs.readFileSync(
-  path.join(__dirname, 'skills/html-slide/navigation.js'), 'utf8'
+  path.join(__dirname, '.claude/skills/html-slide/navigation.js'), 'utf8'
 );
 
 // ===== Read QA runner JS =====
 const qaRunnerJS = fs.readFileSync(
-  path.join(__dirname, 'skills/html-slide/qa/qa-runner.js'), 'utf8'
+  path.join(__dirname, '.claude/skills/html-slide/qa/qa-runner.js'), 'utf8'
 );
 
 // ===== Additional CSS for templates not fully in design-system.css =====

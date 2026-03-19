@@ -20,7 +20,7 @@ const { execSync } = require('child_process');
 const puppeteer = require('puppeteer');
 
 const ROOT = __dirname;
-const SKILL_DIR = path.join(ROOT, 'skills/html-slide');
+const SKILL_DIR = path.join(ROOT, '.claude/skills/html-slide');
 const TEST_INPUTS_DIR = path.join(SKILL_DIR, 'test-inputs');
 const QA_DIR = path.join(SKILL_DIR, 'qa');
 const OUTPUT_DIR = path.join(ROOT, 'output');
