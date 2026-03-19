@@ -1,0 +1,153 @@
+{
+  "id": "sales-proposal",
+  "title": "DXプラットフォーム導入提案書",
+  "audience": "クライアント経営層",
+  "theme": "corporate-blue",
+  "slides": [
+    {
+      "template": "title-gradient",
+      "data": {
+        "title": "DXプラットフォーム<br>導入提案書",
+        "subtitle": "業務効率化とデータ駆動経営の実現に向けて",
+        "date": "2026年3月",
+        "company": "テクノソリューション株式会社"
+      }
+    },
+    {
+      "template": "kpi-3col",
+      "data": {
+        "section_number": "1",
+        "slide_title": "導入効果サマリー",
+        "summary_label": "実績ベース",
+        "summary_text": "既存導入企業50社の平均値。導入後12ヶ月時点での効果測定結果。",
+        "cards": [
+          {
+            "header": "業務効率化",
+            "label": "工数削減率",
+            "number": "42",
+            "unit": "%",
+            "change": "(平均値)",
+            "change_type": "positive"
+          },
+          {
+            "header": "コスト削減",
+            "label": "年間削減額",
+            "number": "1,200",
+            "unit": "万円",
+            "change": "(中央値)",
+            "change_type": "positive"
+          },
+          {
+            "header": "データ活用",
+            "label": "意思決定速度",
+            "number": "3.2",
+            "unit": "倍",
+            "change": "(改善率)",
+            "change_type": "positive"
+          }
+        ],
+        "footnote": "1. 2024年4月〜2025年3月の導入企業50社を対象とした効果測定調査（自社調べ）",
+        "page_number": "3"
+      }
+    },
+    {
+      "template": "chart-bar-dual",
+      "data": {
+        "section_number": "2",
+        "slide_title": "導入前後の比較",
+        "left_title": "月間処理件数",
+        "left_subtitle": "単位：千件",
+        "left_labels": ["導入前","1M","2M","3M","6M","9M","12M"],
+        "left_data": [120, 145, 180, 210, 280, 320, 350],
+        "left_yoy": "+192%",
+        "right_title": "エラー率",
+        "right_subtitle": "単位：%",
+        "right_labels": ["導入前","1M","2M","3M","6M","9M","12M"],
+        "right_data": [8.5, 6.2, 4.1, 2.8, 1.5, 0.9, 0.4],
+        "right_yoy": "-95%",
+        "footnote": "1. 導入企業A社（製造業・従業員500名）の実績データ",
+        "page_number": "4"
+      }
+    },
+    {
+      "template": "table-comparison",
+      "data": {
+        "section_number": "3",
+        "slide_title": "料金プラン比較",
+        "revision_text": "ニーズに合わせた3つのプランをご用意",
+        "rows": [
+          {
+            "label": "月額費用",
+            "before": "スタンダード",
+            "after": "プロフェッショナル",
+            "change": "エンタープライズ"
+          },
+          {
+            "label": "基本料金",
+            "before": "50万円/月",
+            "after": "120万円/月",
+            "change": "個別見積"
+          },
+          {
+            "label": "ユーザー数",
+            "before": "〜50名",
+            "after": "〜200名",
+            "change": "無制限"
+          },
+          {
+            "label": "サポート",
+            "before": "メール対応",
+            "after": "専任担当者",
+            "change": "24/7対応"
+          }
+        ],
+        "supplement": "全プランに初期導入支援（3ヶ月）とデータ移行サポートが含まれます。年間契約で10%割引。",
+        "footnote": "1. 価格は税抜表示。2026年4月時点の料金体系",
+        "page_number": "5"
+      }
+    },
+    {
+      "template": "text-review",
+      "data": {
+        "section_number": "4",
+        "slide_title": "導入スケジュールと体制",
+        "policy_items": [
+          "Phase 1（1-3ヶ月）: 現状分析・要件定義・プロトタイプ構築",
+          "Phase 2（4-6ヶ月）: 本番環境構築・データ移行・並行稼働"
+        ],
+        "results": [
+          {
+            "icon": "1",
+            "title": "専任PM配置",
+            "metric": "1名",
+            "desc": "御社担当の専任プロジェクトマネージャー",
+            "accent": false
+          },
+          {
+            "icon": "2",
+            "title": "技術サポート",
+            "metric": "5名体制",
+            "desc": "導入期間中の開発・インフラ・データエンジニア",
+            "accent": false
+          },
+          {
+            "icon": "3",
+            "title": "トレーニング",
+            "metric": "全8回",
+            "desc": "管理者向け4回＋利用者向け4回の研修プログラム",
+            "accent": false
+          },
+          {
+            "icon": "4",
+            "title": "稼働目標",
+            "metric": "6ヶ月",
+            "desc": "契約開始から本番稼働までの標準リードタイム",
+            "accent": true
+          }
+        ],
+        "footnote": "1. スケジュールは標準的な導入規模（ユーザー100名程度）の場合",
+        "page_number": "6"
+      }
+    }
+  ]
+}

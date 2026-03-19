@@ -1,0 +1,153 @@
+{
+  "id": "project-report",
+  "title": "新規事業プロジェクト 月次報告",
+  "audience": "経営会議",
+  "theme": "corporate-blue",
+  "slides": [
+    {
+      "template": "title-gradient",
+      "data": {
+        "title": "新規事業プロジェクト<br>月次報告",
+        "subtitle": "2026年3月度 進捗報告・課題・次月アクション",
+        "date": "2026年3月19日",
+        "company": "イノベーション事業部"
+      }
+    },
+    {
+      "template": "kpi-3col",
+      "data": {
+        "section_number": "1",
+        "slide_title": "主要KPI進捗",
+        "summary_label": "3月度",
+        "summary_text": "ユーザー獲得は計画比120%と好調。収益化指標は来月から本格計測開始。",
+        "cards": [
+          {
+            "header": "ユーザー獲得",
+            "label": "累計登録数",
+            "number": "12,400",
+            "unit": "人",
+            "change": "(計画比 120%)",
+            "change_type": "positive"
+          },
+          {
+            "header": "エンゲージメント",
+            "label": "WAU/MAU",
+            "number": "68",
+            "unit": "%",
+            "change": "(目標: 60%)",
+            "change_type": "positive"
+          },
+          {
+            "header": "NPS",
+            "label": "推奨度",
+            "number": "+42",
+            "unit": "pt",
+            "change": "(前月比 +8)",
+            "change_type": "positive"
+          }
+        ],
+        "footnote": "1. WAU = Weekly Active Users / MAU = Monthly Active Users。NPS = Net Promoter Score",
+        "page_number": "3"
+      }
+    },
+    {
+      "template": "chart-bar-dual",
+      "data": {
+        "section_number": "2",
+        "slide_title": "月次推移",
+        "left_title": "新規登録ユーザー数",
+        "left_subtitle": "単位：人",
+        "left_labels": ["10月","11月","12月","1月","2月","3月"],
+        "left_data": [800, 1200, 1800, 2400, 3000, 3200],
+        "left_yoy": "+167%",
+        "right_title": "アクティブユーザー率",
+        "right_subtitle": "単位：%",
+        "right_labels": ["10月","11月","12月","1月","2月","3月"],
+        "right_data": [45, 52, 58, 62, 65, 68],
+        "right_yoy": "+51%",
+        "footnote": "1. 2025年10月のβ版ローンチからの推移",
+        "page_number": "4"
+      }
+    },
+    {
+      "template": "text-review",
+      "data": {
+        "section_number": "3",
+        "slide_title": "今月の振り返りと課題",
+        "policy_items": [
+          "プロダクト改善（検索機能強化・通知最適化）によりリテンション率を向上",
+          "口コミ経由の新規獲得が全体の35%に到達、CAC改善に寄与"
+        ],
+        "results": [
+          {
+            "icon": "1",
+            "title": "成果: 検索改善",
+            "metric": "+28%",
+            "desc": "検索経由のコンバージョン率が大幅改善",
+            "accent": false
+          },
+          {
+            "icon": "2",
+            "title": "成果: 口コミ獲得",
+            "metric": "35%",
+            "desc": "全新規ユーザーのうちオーガニック流入比率",
+            "accent": false
+          },
+          {
+            "icon": "3",
+            "title": "課題: CS体制",
+            "metric": "応答48h",
+            "desc": "目標24h対し平均48h。人員増強が急務",
+            "accent": true
+          },
+          {
+            "icon": "4",
+            "title": "課題: インフラ",
+            "metric": "99.2%",
+            "desc": "可用性目標99.9%に対し未達。DB最適化を計画",
+            "accent": true
+          }
+        ],
+        "footnote": "1. CAC = Customer Acquisition Cost（顧客獲得単価）",
+        "page_number": "5"
+      }
+    },
+    {
+      "template": "table-comparison",
+      "data": {
+        "section_number": "4",
+        "slide_title": "予算消化と次月計画",
+        "revision_text": "予算消化率75%（計画通り）。追加投資の検討を提案",
+        "rows": [
+          {
+            "label": "開発費",
+            "before": "予算 3,600万円",
+            "after": "実績 2,680万円",
+            "change": "消化率 74%"
+          },
+          {
+            "label": "マーケ費",
+            "before": "予算 1,200万円",
+            "after": "実績 920万円",
+            "change": "消化率 77%"
+          },
+          {
+            "label": "人件費",
+            "before": "予算 4,800万円",
+            "after": "実績 3,650万円",
+            "change": "消化率 76%"
+          },
+          {
+            "label": "合計",
+            "before": "予算 9,600万円",
+            "after": "実績 7,250万円",
+            "change": "消化率 76%"
+          }
+        ],
+        "supplement": "ユーザー獲得好調を受け、4月度以降のマーケティング予算追加（+300万円/月）を提案します。",
+        "footnote": "1. 2025年10月〜2026年3月の累計（6ヶ月分）",
+        "page_number": "6"
+      }
+    }
+  ]
+}

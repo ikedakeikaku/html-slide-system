@@ -1,0 +1,153 @@
+{
+  "id": "ir-presentation",
+  "title": "FY2026.6 1Q 決算説明資料",
+  "audience": "投資家・アナリスト",
+  "theme": "corporate-blue",
+  "slides": [
+    {
+      "template": "title-gradient",
+      "data": {
+        "title": "FY2026.6 1Q<br>決算説明資料",
+        "subtitle": "2026年3月期 第1四半期 決算説明",
+        "date": "2026年3月19日",
+        "company": "サンプル株式会社"
+      }
+    },
+    {
+      "template": "kpi-3col",
+      "data": {
+        "section_number": "1",
+        "slide_title": "連結ハイライト",
+        "summary_label": "FY2026.6 1Q",
+        "summary_text": "売上収益・コア営業利益ともに過去最高を更新。全セグメントで増収増益。",
+        "cards": [
+          {
+            "header": "Marketplace",
+            "label": "GMV",
+            "number": "3,291",
+            "unit": "億円",
+            "change": "(YoY +8%)",
+            "change_type": "positive"
+          },
+          {
+            "header": "Fintech",
+            "label": "与信残高",
+            "number": "3,007",
+            "unit": "億円",
+            "change": "(YoY +41%)",
+            "change_type": "positive"
+          },
+          {
+            "header": "US Marketplace",
+            "label": "GMV",
+            "number": "$196",
+            "unit": "M",
+            "change": "(YoY +22%)",
+            "change_type": "positive"
+          }
+        ],
+        "footnote": "1. GMV = Gross Merchandise Value（流通取引総額）",
+        "page_number": "3"
+      }
+    },
+    {
+      "template": "chart-bar-dual",
+      "data": {
+        "section_number": "1",
+        "slide_title": "四半期業績推移",
+        "left_title": "売上収益",
+        "left_subtitle": "単位：億円",
+        "left_labels": ["1Q\\nFY24","2Q","3Q","4Q","1Q\\nFY25","2Q","3Q","4Q","1Q\\nFY26"],
+        "left_data": [442, 481, 484, 465, 449, 492, 499, 485, 568],
+        "left_yoy": "+15%",
+        "right_title": "コア営業利益",
+        "right_subtitle": "単位：億円",
+        "right_labels": ["1Q\\nFY24","2Q","3Q","4Q","1Q\\nFY25","2Q","3Q","4Q","1Q\\nFY26"],
+        "right_data": [47, 39, 47, 54, 40, 70, 88, 75, 109],
+        "right_yoy": "+54%",
+        "footnote": "1. コア営業利益 = IFRS営業利益からその他の収益/その他の費用等を控除した利益",
+        "page_number": "4"
+      }
+    },
+    {
+      "template": "text-review",
+      "data": {
+        "section_number": "2",
+        "slide_title": "JP Marketplace 振り返り",
+        "policy_items": [
+          "プロダクトのコア体験強化を最優先に進めつつ、効果の高いマーケティング施策を実行",
+          "CtoC取引のUX改善とカテゴリ拡充により、GMV成長を加速"
+        ],
+        "results": [
+          {
+            "icon": "1",
+            "title": "売上収益",
+            "metric": "142億円",
+            "desc": "YoY +22%｜マーケティング効率改善により過去最高を更新",
+            "accent": false
+          },
+          {
+            "icon": "2",
+            "title": "コア営業利益",
+            "metric": "27億円",
+            "desc": "YoY +125%｜利益率は7.8%から12.2%に大幅改善",
+            "accent": false
+          },
+          {
+            "icon": "3",
+            "title": "課題: MAU成長の鈍化",
+            "metric": "2,280万",
+            "desc": "YoY +2%｜新規獲得コスト上昇でMAU成長鈍化",
+            "accent": true
+          },
+          {
+            "icon": "4",
+            "title": "GMV",
+            "metric": "3,291億円",
+            "desc": "YoY +8%｜出品数増加と購入単価上昇がけん引",
+            "accent": false
+          }
+        ],
+        "footnote": "1. MAU = Monthly Active Users（月間アクティブユーザー数）",
+        "page_number": "5"
+      }
+    },
+    {
+      "template": "table-comparison",
+      "data": {
+        "section_number": "3",
+        "slide_title": "通期業績予想の上方修正",
+        "revision_text": "FY2026.6 通期業績予想を上方修正",
+        "rows": [
+          {
+            "label": "売上収益",
+            "before": "2,000〜2,100億円",
+            "after": "2,100〜2,200億円",
+            "change": "+100億円"
+          },
+          {
+            "label": "コア営業利益",
+            "before": "280〜320億円",
+            "after": "320〜360億円",
+            "change": "+40億円"
+          },
+          {
+            "label": "IFRS営業利益",
+            "before": "250〜290億円",
+            "after": "290〜330億円",
+            "change": "+40億円"
+          },
+          {
+            "label": "当期利益",
+            "before": "160〜190億円",
+            "after": "190〜220億円",
+            "change": "+30億円"
+          }
+        ],
+        "supplement": "売上収益・コア営業利益ともに1Q実績が想定を上回ったことを踏まえ、通期業績予想を上方修正。",
+        "footnote": "1. コア営業利益 = IFRS営業利益からその他の収益/その他の費用等を控除した利益",
+        "page_number": "6"
+      }
+    }
+  ]
+}

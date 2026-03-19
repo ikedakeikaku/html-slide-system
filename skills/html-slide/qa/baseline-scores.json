@@ -1,0 +1,40 @@
+{
+  "timestamp": "2026-03-19T12:50:57.195Z",
+  "aggregate_score": 100,
+  "per_input": [
+    {
+      "name": "ir-presentation",
+      "score": 100,
+      "total": 47,
+      "passed": 47,
+      "failed": []
+    },
+    {
+      "name": "project-report",
+      "score": 100,
+      "total": 47,
+      "passed": 47,
+      "failed": []
+    },
+    {
+      "name": "sales-proposal",
+      "score": 100,
+      "total": 47,
+      "passed": 47,
+      "failed": []
+    }
+  ],
+  "check_pass_rates": {
+    "A1_no_overflow": 100,
+    "A2_no_text_overlap": 100,
+    "A3_font_min_14px": 100,
+    "A4_navigation_works": 100,
+    "B1_padding_100px": 100,
+    "B2_title_gap_40px": 100,
+    "B3_has_visual": 100,
+    "B4_no_3_consecutive_same": 100,
+    "C1_kpi_font_48px": 100,
+    "C3_data_has_footnote": 100,
+    "C4_has_page_number": 100
+  }
+}
