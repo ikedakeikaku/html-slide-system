@@ -279,13 +279,318 @@ ${policyItems}
     </section>`;
 }
 
+// ===== New template generators (16 additional) =====
+
+function generateTitleImage(data, slideIndex) {
+  const company = escHtml(data.company || 'Company');
+  return `
+    <section class="slide slide--title-image${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <div class="title-image-bg"></div>
+      <div class="title-image-overlay"></div>
+      <div class="title-image-content">
+        <div class="title-logo"><svg viewBox="0 0 ${56 + company.length * 22} 40" xmlns="http://www.w3.org/2000/svg"><rect width="40" height="40" rx="8" fill="var(--color-primary)"/><text x="52" y="28" font-family="system-ui" font-size="20" font-weight="700" fill="#fff">${company}</text></svg></div>
+        <div class="title-image-accent"></div>
+        <h1 class="title-image-main">${data.title || ''}</h1>
+        <p class="title-image-sub">${escHtml(data.subtitle)}</p>
+        <p class="title-image-date">${escHtml(data.date)}</p>
+      </div>
+    </section>`;
+}
+
+function generateTitleMinimal(data, slideIndex) {
+  return `
+    <section class="slide slide--title slide--title-minimal${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <h1 class="title-minimal-main">${data.title || ''}</h1>
+      <div class="title-minimal-accent"></div>
+      <p class="title-minimal-sub">${escHtml(data.subtitle)}</p>
+      <p class="title-minimal-date">${escHtml(data.date)}</p>
+    </section>`;
+}
+
+function generateToc(data, slideIndex) {
+  const items = (data.items || []).map((item, idx) => `
+        <div class="toc-item">
+          <div class="toc-item__left"><span class="toc-badge">${idx + 1}</span><span class="toc-item__title">${escHtml(item.title)}</span></div>
+          <span class="toc-item__page">P.${escHtml(item.page)}</span>
+        </div>`).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <h1 class="slide-title" style="font-size:40px;font-weight:800;margin-bottom:48px;">${escHtml(data.slide_title || '目次')}</h1>
+      <div class="toc-list">${items}
+      </div>
+      <footer class="slide-footer">
+        <div class="slide-footer__notes"></div>
+        <div class="slide-footer__page">${escHtml(data.page_number || '2')}</div>
+      </footer>
+    </section>`;
+}
+
+function generateSectionDivider(data, slideIndex) {
+  return `
+    <section class="slide slide--section${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}" style="display:flex;flex-direction:column;justify-content:center;padding:120px 140px;position:absolute;top:0;left:0;">
+      <div style="position:absolute;right:80px;top:50%;transform:translateY(-50%);font-size:320px;font-weight:900;color:rgba(6,82,221,0.06);line-height:1;pointer-events:none;">${escHtml(data.section_number || '01')}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--color-primary);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">SECTION ${escHtml(data.section_number || '01')}</div>
+      <h1 style="font-size:40px;font-weight:800;color:var(--color-text);margin-bottom:16px;">${escHtml(data.slide_title)}</h1>
+      <p style="font-size:20px;color:var(--color-text-muted);">${escHtml(data.subtitle || '')}</p>
+      <div class="gradient-art"></div>
+    </section>`;
+}
+
+function generateKpi2col(data, slideIndex) {
+  const cards = (data.cards || []).map(c => `
+          <div class="kpi-card">
+            <div class="kpi-card__header">${escHtml(c.header)}</div>
+            <div class="kpi-card__body">
+              <span class="kpi-label">${escHtml(c.label)}</span>
+              <div class="kpi-value"><span class="kpi-number" style="font-size:72px;">${escHtml(c.number)}</span><span class="kpi-unit">${escHtml(c.unit)}</span></div>
+              <span class="kpi-change ${c.change_type || 'positive'}">${escHtml(c.change)}</span>
+            </div>
+          </div>`).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="kpi-content">
+        <div class="kpi-summary"><span class="kpi-summary__label">${escHtml(data.summary_label)}</span><span class="kpi-summary__text">${escHtml(data.summary_text)}</span></div>
+        <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr);">${cards}</div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateKpiHighlight(data, slideIndex) {
+  const items = (data.highlights || []).map(h => `
+          <div class="highlight-card" style="text-align:center;flex:1;">
+            <span style="font-size:18px;color:var(--color-text-muted);display:block;margin-bottom:16px;">${escHtml(h.label)}</span>
+            <span class="highlight-number" style="font-size:96px;font-weight:800;color:var(--color-primary);display:block;line-height:1.1;">${escHtml(h.number)}</span>
+            <span style="font-size:24px;color:var(--color-text-muted);display:block;margin:8px 0;">${escHtml(h.unit)}</span>
+            <span style="display:inline-block;padding:8px 24px;border:2px solid var(--color-primary);border-radius:999px;font-weight:700;color:var(--color-primary);margin:12px 0;">${escHtml(h.change)}</span>
+            <p style="font-size:16px;color:var(--color-text-muted);margin-top:8px;">${escHtml(h.desc || '')}</p>
+          </div>`).join('<div style="width:1px;background:var(--color-border);margin:0 40px;"></div>');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="kpi-grid" style="display:flex;align-items:center;justify-content:center;flex:1;padding:40px 0;">${items}</div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateChartBarSingle(data, slideIndex) {
+  const chartId = `chart-single-${slideIndex}`;
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="chart-panel"><div class="chart-panel__title">${escHtml(data.chart_title)}</div><div class="chart-panel__subtitle">${escHtml(data.chart_subtitle)}</div>
+        <div class="chart-panel__canvas-wrap" style="height:520px;"><canvas id="${chartId}"></canvas></div>
+        <div class="chart-panel__yoy" style="text-align:right;margin-top:16px;"><span class="yoy-value">YoY</span><span class="yoy-percent">${escHtml(data.yoy)}</span></div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+function generateChartBarSingleScript(data, slideIndex) {
+  const labels = chartLabelsToJs(data.labels);
+  const chartData = JSON.stringify(data.data || []);
+  const chartId = `chart-single-${slideIndex}`;
+  return `
+    (function(){var d=${chartData};new Chart(document.getElementById('${chartId}'),{type:'bar',data:{labels:${labels},datasets:[{data:d,backgroundColor:d.map(function(_,i){return i===d.length-1?'#0652DD':'#B0C4FF'}),borderRadius:4,barPercentage:0.7,categoryPercentage:0.85}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:32,bottom:8}},plugins:{legend:{display:false},datalabels:{anchor:'end',align:'top',offset:4,font:{size:14,weight:'bold',family:'system-ui'},color:function(ctx){return ctx.dataIndex===ctx.dataset.data.length-1?'#0652DD':'#6B7280'}}},scales:{y:{display:false,beginAtZero:true},x:{grid:{display:false},ticks:{font:{size:12},color:'#6B7280',maxRotation:0}}}}});})();`;
+}
+
+function generateChartStacked(data, slideIndex) {
+  const chartId = `chart-stacked-${slideIndex}`;
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="chart-panel stacked-chart"><div class="chart-panel__title">${escHtml(data.chart_title)}</div><div class="chart-panel__subtitle">${escHtml(data.chart_subtitle)}</div>
+        <div class="chart-panel__canvas-wrap" style="height:520px;"><canvas id="${chartId}"></canvas></div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+function generateChartStackedScript(data, slideIndex) {
+  const labels = chartLabelsToJs(data.labels);
+  const datasets = (data.datasets || []).map((ds, idx) => {
+    const colors = ['#B0C4FF','#6B9AFF','#0652DD','#003BB5','#FF4757'];
+    return `{label:'${escHtml(ds.label)}',data:${JSON.stringify(ds.data)},backgroundColor:'${colors[idx]||colors[0]}'}`;
+  }).join(',');
+  return `
+    (function(){new Chart(document.getElementById('chart-stacked-${slideIndex}'),{type:'bar',data:{labels:${labels},datasets:[${datasets}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:8,bottom:8}},plugins:{legend:{position:'top',labels:{font:{size:13,family:'system-ui'}}},datalabels:{display:true,color:'#fff',font:{size:12,weight:'bold'},formatter:function(v){return v+'%';}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,max:100,ticks:{callback:function(v){return v+'%'}}}}}});})();`;
+}
+
+function generateChartLine(data, slideIndex) {
+  const chartId = `chart-line-${slideIndex}`;
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="chart-panel"><div class="chart-panel__subtitle">${escHtml(data.chart_subtitle)}</div>
+        <div class="chart-panel__canvas-wrap" style="height:520px;"><canvas id="${chartId}"></canvas></div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+function generateChartLineScript(data, slideIndex) {
+  const labels = chartLabelsToJs(data.labels);
+  const datasets = (data.datasets || []).map(ds =>
+    `{label:'${escHtml(ds.label)}',data:${JSON.stringify(ds.data)},borderColor:'${ds.color||'#0652DD'}',backgroundColor:'${ds.bg||'rgba(6,82,221,0.1)'}',tension:0.3,pointRadius:4,fill:${ds.fill||false}}`
+  ).join(',');
+  return `
+    (function(){new Chart(document.getElementById('chart-line-${slideIndex}'),{type:'line',data:{labels:${labels},datasets:[${datasets}]},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:16,bottom:8}},plugins:{legend:{position:'top',labels:{font:{size:13,family:'system-ui'}}},datalabels:{display:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true}}}});})();`;
+}
+
+function generateChartPie(data, slideIndex) {
+  const chartId = `chart-pie-${slideIndex}`;
+  const legendItems = (data.segments || []).map(s =>
+    `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--color-border);"><div style="display:flex;align-items:center;gap:12px;"><div style="width:16px;height:16px;border-radius:4px;background:${s.color||'#0652DD'};"></div><div><div style="font-weight:600;font-size:16px;">${escHtml(s.label)}</div><div style="font-size:13px;color:var(--color-text-muted);">${escHtml(s.sub||'')}</div></div></div><div style="font-size:24px;font-weight:800;">${escHtml(s.percent)}</div></div>`
+  ).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;">
+        <div style="position:relative;"><canvas id="${chartId}" style="max-height:450px;"></canvas>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;"><div style="font-size:48px;font-weight:800;color:var(--color-text);">${escHtml(data.center_value)}</div><div style="font-size:16px;color:var(--color-text-muted);">${escHtml(data.center_label)}</div></div>
+        </div>
+        <div>${legendItems}</div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+function generateChartPieScript(data, slideIndex) {
+  const colors = ['#B0C4FF','#6B9AFF','#0652DD','#003BB5','#FF4757'];
+  const vals = JSON.stringify((data.segments||[]).map(s => s.value));
+  const lbls = JSON.stringify((data.segments||[]).map(s => s.label));
+  const cols = JSON.stringify((data.segments||[]).map((s,i) => s.color||colors[i]||colors[0]));
+  return `
+    (function(){new Chart(document.getElementById('chart-pie-${slideIndex}'),{type:'doughnut',data:{labels:${lbls},datasets:[{data:${vals},backgroundColor:${cols},borderWidth:0}]},options:{responsive:true,cutout:'55%',plugins:{legend:{display:false},datalabels:{color:'#fff',font:{size:14,weight:'bold'},formatter:function(v,ctx){var t=ctx.dataset.data.reduce(function(a,b){return a+b},0);return Math.round(v/t*100)+'%';}}}}});})();`;
+}
+
+function generateTableData(data, slideIndex) {
+  const headers = (data.headers || []).map(h => `<th>${escHtml(h)}</th>`).join('');
+  const rows = (data.rows || []).map((row, ri) => {
+    const cls = ri === (data.rows||[]).length - 1 ? ' style="font-weight:700;border-top:2px solid var(--color-primary);"' : '';
+    const cells = row.map((cell, ci) => {
+      const isLabel = ci === 0;
+      const highlight = cell.highlight ? ` class="${cell.highlight}"` : '';
+      const val = typeof cell === 'object' ? cell.value : cell;
+      return isLabel ? `<td class="row-label">${escHtml(val)}</td>` : `<td${highlight}>${escHtml(val)}</td>`;
+    }).join('');
+    return `<tr${cls}>${cells}</tr>`;
+  }).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <table class="data-table"><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateText2col(data, slideIndex) {
+  function colHtml(col, accent) {
+    const hdrCls = accent ? ' accent' : '';
+    const items = (col.items || []).map(item =>
+      `<div style="border-left:4px solid ${accent?'var(--color-accent)':'var(--color-primary)'};padding:16px 24px;margin-bottom:16px;background:var(--color-bg-subtle);border-radius:0 8px 8px 0;"><div style="font-weight:700;margin-bottom:4px;">${escHtml(item.title)}</div><div style="font-size:15px;color:var(--color-text-muted);line-height:1.6;">${escHtml(item.desc)}</div></div>`
+    ).join('');
+    return `<div><div class="comparison-header${hdrCls}">${escHtml(col.header)}</div>${items}</div>`;
+  }
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="comparison-grid">${colHtml(data.left || {}, false)}${colHtml(data.right || {}, true)}</div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateTextBullet(data, slideIndex) {
+  const bullets = (data.bullets || []).map((b, idx) =>
+    `<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:20px;"><div style="width:36px;height:36px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0;">${idx+1}</div><div><div style="font-weight:700;font-size:17px;margin-bottom:4px;">${escHtml(b.title)}</div><div style="font-size:15px;color:var(--color-text-muted);line-height:1.6;">${escHtml(b.desc)}</div></div></div>`
+  ).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="bullet-visual" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;">
+        <div>${bullets}</div>
+        <div style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));border-radius:16px;padding:48px 40px;color:#fff;text-align:center;">
+          <div style="font-size:14px;margin-bottom:8px;opacity:0.8;">${escHtml(data.visual_label || '')}</div>
+          <div style="font-size:64px;font-weight:800;line-height:1.1;">${escHtml(data.visual_number || '')}</div>
+          <div style="font-size:20px;margin:8px 0;">${escHtml(data.visual_unit || '')}</div>
+          <div style="width:60px;height:2px;background:rgba(255,255,255,0.3);margin:16px auto;"></div>
+          <div style="font-size:14px;opacity:0.8;">${escHtml(data.visual_desc || '')}</div>
+        </div>
+      </div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateFlowDiagram(data, slideIndex) {
+  const steps = (data.steps || []).map((step, idx, arr) => {
+    const arrow = idx < arr.length - 1 ? '<div style="display:flex;align-items:center;font-size:28px;color:var(--color-primary);padding:0 8px;">&#x2192;</div>' : '';
+    const lastCls = idx === arr.length - 1 ? 'var(--color-accent)' : 'var(--color-primary)';
+    return `<div style="flex:1;background:var(--color-bg-subtle);border-radius:12px;overflow:hidden;text-align:center;"><div style="background:${lastCls};color:#fff;padding:12px;font-weight:700;font-size:15px;">STEP ${idx+1}</div><div style="padding:20px 16px;"><div style="font-weight:700;font-size:17px;margin-bottom:8px;">${escHtml(step.title)}</div><div style="font-size:14px;color:var(--color-text-muted);line-height:1.5;">${escHtml(step.desc)}</div>${step.metric?`<div style="color:var(--color-primary);font-weight:700;font-size:14px;margin-top:8px;">${escHtml(step.metric)}</div>`:''}</div></div>${arrow}`;
+  }).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="flow-diagram" style="display:flex;align-items:stretch;gap:0;margin-top:24px;">${steps}</div>
+      ${data.summary ? `<div style="margin-top:40px;padding:20px 28px;background:var(--color-primary-light);border-radius:12px;display:flex;gap:24px;align-items:center;"><span style="font-weight:700;color:var(--color-primary);">ポイント</span><span style="font-size:16px;line-height:1.6;">${escHtml(data.summary)}</span></div>` : ''}
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateTimeline(data, slideIndex) {
+  const milestones = (data.milestones || []).map((m, idx) => {
+    const active = m.active ? 'var(--color-accent)' : 'var(--color-primary)';
+    const status = m.status ? `<span style="display:inline-block;padding:4px 16px;background:${active};color:#fff;border-radius:999px;font-size:13px;font-weight:600;margin-top:8px;">${escHtml(m.status)}</span>` : '';
+    return `<div style="flex:1;text-align:center;"><div style="display:inline-block;padding:6px 20px;background:${m.active?'var(--color-accent-light)':'var(--color-primary-light)'};color:${active};border-radius:999px;font-weight:700;font-size:14px;margin-bottom:16px;">${escHtml(m.date)}</div><div style="font-size:13px;color:var(--color-text-muted);margin-bottom:8px;">PHASE ${idx+1}</div><div style="width:24px;height:24px;border-radius:50%;border:3px solid ${active};margin:0 auto 16px;background:#fff;"></div><div style="background:var(--color-bg-subtle);border-radius:12px;padding:20px 16px;"><div style="font-weight:700;font-size:17px;margin-bottom:8px;">${escHtml(m.title)}</div><div style="font-size:14px;color:var(--color-text-muted);line-height:1.5;">${escHtml(m.desc)}</div>${status}</div></div>`;
+  }).join('');
+  return `
+    <section class="slide${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title)}</h1></div></header>
+      <div class="timeline" style="display:flex;gap:24px;align-items:flex-start;margin-top:24px;">${milestones}</div>
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote)}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
+function generateClosing(data, slideIndex) {
+  const cards = (data.actions || []).map((a, idx) =>
+    `<div class="closing-cards" style="background:var(--color-bg-subtle);border-radius:12px;padding:28px;border-top:4px solid var(--color-primary);"><div style="width:40px;height:40px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin-bottom:16px;">${idx+1}</div><div style="font-weight:700;font-size:18px;margin-bottom:8px;">${escHtml(a.title)}</div><div style="font-size:15px;color:var(--color-text-muted);line-height:1.6;margin-bottom:12px;">${escHtml(a.desc)}</div>${a.deadline?`<div style="font-size:14px;font-weight:700;color:var(--color-accent);">期限：${escHtml(a.deadline)}</div>`:''}</div>`
+  ).join('');
+  return `
+    <section class="slide slide--closing${slideIndex === 0 ? ' active' : ''}" id="slide-${slideIndex + 1}">
+      <header class="slide-header"><div class="slide-header__left"><span class="section-badge">${escHtml(data.section_number)}</span><h1 class="slide-title">${escHtml(data.slide_title || 'まとめ・Next Steps')}</h1></div></header>
+      <div style="display:grid;grid-template-columns:repeat(${(data.actions||[]).length},1fr);gap:32px;">${cards}</div>
+      ${data.thanks ? `<div style="text-align:center;margin-top:auto;padding-top:48px;"><div style="font-size:28px;font-weight:700;color:var(--color-text-muted);">Thank you</div><div style="font-size:16px;color:var(--color-text-muted);margin-top:8px;">${escHtml(data.thanks)}</div></div>` : ''}
+      <footer class="slide-footer"><div class="slide-footer__notes"><p>${escHtml(data.footnote || '')}</p></div><div class="slide-footer__page">${escHtml(data.page_number)}</div></footer>
+    </section>`;
+}
+
 // ===== Template dispatcher =====
 const generators = {
   'title-gradient': generateTitleGradient,
+  'title-image': generateTitleImage,
+  'title-minimal': generateTitleMinimal,
+  'toc': generateToc,
+  'section-divider': generateSectionDivider,
   'kpi-3col': generateKpi3col,
+  'kpi-2col': generateKpi2col,
+  'kpi-highlight': generateKpiHighlight,
   'chart-bar-dual': generateChartBarDual,
+  'chart-bar-single': generateChartBarSingle,
+  'chart-stacked': generateChartStacked,
+  'chart-line': generateChartLine,
+  'chart-pie': generateChartPie,
   'table-comparison': generateTableComparison,
+  'table-data': generateTableData,
   'text-review': generateTextReview,
+  'text-2col': generateText2col,
+  'text-bullet': generateTextBullet,
+  'flow-diagram': generateFlowDiagram,
+  'timeline': generateTimeline,
+  'closing': generateClosing,
+};
+
+const chartTemplates = {
+  'chart-bar-dual': generateChartScript,
+  'chart-bar-single': generateChartBarSingleScript,
+  'chart-stacked': generateChartStackedScript,
+  'chart-line': generateChartLineScript,
+  'chart-pie': generateChartPieScript,
 };
 
 // ===== Build slides =====
@@ -301,9 +606,10 @@ input.slides.forEach(function(slide, i) {
   }
   slideSections += gen(slide.data, i);
 
-  if (slide.template === 'chart-bar-dual') {
+  const chartGen = chartTemplates[slide.template];
+  if (chartGen) {
     hasCharts = true;
-    chartScripts += generateChartScript(slide.data, i);
+    chartScripts += chartGen(slide.data, i);
   }
 });
 
@@ -541,6 +847,35 @@ const additionalCSS = `
       line-height: 1.6;
       color: var(--color-text);
     }
+
+    /* ===== Title Image ===== */
+    .slide--title-image { padding: 0 !important; position: relative; }
+    .title-image-bg { position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(6,82,221,0.03) 0px,rgba(6,82,221,0.03) 2px,transparent 2px,transparent 12px),linear-gradient(135deg,#0a1628 0%,#1a2744 50%,#0d1f3c 100%); }
+    .title-image-overlay { position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,22,40,0.95) 0%,rgba(10,22,40,0.7) 60%,rgba(10,22,40,0.3) 100%); }
+    .title-image-content { position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:120px 140px;height:100%; }
+    .title-image-content .title-logo { margin-bottom:auto; }
+    .title-image-accent { width:80px;height:4px;background:var(--color-primary);margin-bottom:24px; }
+    .title-image-main { font-size:48px;font-weight:800;color:#fff;line-height:1.35;max-width:900px;margin-bottom:16px; }
+    .title-image-sub { font-size:20px;color:rgba(255,255,255,0.7);max-width:700px; }
+    .title-image-date { font-size:16px;color:rgba(255,255,255,0.5);margin-top:32px; }
+
+    /* ===== Title Minimal ===== */
+    .slide--title-minimal { display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center; }
+    .title-minimal-main { font-size:56px;font-weight:800;line-height:1.35;margin-bottom:24px; }
+    .title-minimal-accent { width:80px;height:4px;background:var(--color-primary);margin-bottom:32px; }
+    .title-minimal-sub { font-size:24px;color:var(--color-text-muted); }
+    .title-minimal-date { font-size:18px;color:var(--color-text-muted);margin-top:32px; }
+
+    /* ===== TOC ===== */
+    .toc-list { display:flex;flex-direction:column;gap:32px;padding:0 40px; }
+    .toc-item { display:flex;justify-content:space-between;align-items:center; }
+    .toc-item__left { display:flex;align-items:center;gap:20px; }
+    .toc-badge { display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;background:var(--color-primary);color:#fff;font-weight:700;font-size:20px;border-radius:8px; }
+    .toc-item__title { font-size:24px;font-weight:600; }
+    .toc-item__page { font-size:16px;color:var(--color-text-muted); }
+
+    /* ===== Section Divider ===== */
+    .slide--section { overflow:hidden; }
 `;
 
 // ===== Assemble full HTML =====

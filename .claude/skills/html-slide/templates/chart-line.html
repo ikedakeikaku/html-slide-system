@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chart Line Template</title>
+  <style>
+    :root {
+      --color-primary: #0652DD;
+      --color-primary-light: #E8EEFF;
+      --color-primary-dark: #003BB5;
+      --color-accent: #FF4757;
+      --color-accent-light: #FFE8EA;
+      --color-bg: #FFFFFF;
+      --color-bg-subtle: #F8F9FA;
+      --color-text: #1A1A1A;
+      --color-text-muted: #6B7280;
+      --color-border: #E5E7EB;
+      --font-heading: "Noto Sans JP", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --font-body: "Noto Sans JP", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", monospace;
+      --slide-width: 1920px;
+      --slide-height: 1080px;
+      --slide-padding: 120px;
+      --slide-padding-top: 100px;
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 24px;
+      --space-lg: 40px;
+      --space-xl: 64px;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-pill: 999px;
+      --chart-1: #B0C4FF;
+      --chart-2: #6B9AFF;
+      --chart-3: #0652DD;
+      --chart-4: #003BB5;
+      --chart-accent: #FF4757;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; width: 100%; height: 100%; background: #000; }
+
+    .slides-container {
+      width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    }
+
+    .slide {
+      width: var(--slide-width);
+      height: var(--slide-height);
+      padding: var(--slide-padding-top) var(--slide-padding) var(--slide-padding);
+      position: absolute; top: 0; left: 0;
+      background: var(--color-bg);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      transform-origin: top left;
+      overflow: hidden;
+      font-family: var(--font-body);
+      color: var(--color-text);
+    }
+    .slide.active { opacity: 1; pointer-events: auto; z-index: 1; }
+
+    /* ===== Header ===== */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: var(--space-lg);
+    }
+    .slide-header__left { display: flex; align-items: center; gap: var(--space-sm); }
+    .section-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; background: var(--color-primary);
+      color: white; font-weight: 700; font-size: 20px;
+      border-radius: var(--radius-sm); flex-shrink: 0;
+    }
+    .slide-title {
+      font-family: var(--font-heading); font-size: 36px; font-weight: 800;
+      color: var(--color-text); line-height: 1.3;
+    }
+
+    /* ===== Chart Area ===== */
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .chart-subtitle {
+      font-size: 16px;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+      align-self: flex-start;
+    }
+
+    .chart-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 520px;
+    }
+
+    .chart-canvas-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* ===== Footer ===== */
+    .slide-footer {
+      position: absolute; bottom: 36px;
+      left: var(--slide-padding); right: var(--slide-padding);
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .slide-footer__notes { font-size: 11px; color: var(--color-text-muted); max-width: 80%; line-height: 1.5; }
+    .slide-footer__page { font-size: 14px; color: var(--color-text-muted); }
+
+    /* ===== Navigation ===== */
+    .slide-nav {
+      position: fixed; bottom: 20px; right: 20px;
+      display: flex; align-items: center; gap: 8px; z-index: 100;
+      background: rgba(0,0,0,0.6); padding: 8px 16px;
+      border-radius: var(--radius-pill); opacity: 0; transition: opacity 0.3s;
+    }
+    .slide-nav:hover { opacity: 1; }
+    .slide-nav button {
+      background: none; border: none; color: white;
+      font-size: 20px; cursor: pointer; padding: 4px 8px;
+    }
+    .slide-nav button:hover { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    .slide-counter { color: white; font-size: 14px; font-family: var(--font-mono); }
+
+    .progress-bar {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 4px;
+      background: rgba(0,0,0,0.1); z-index: 100;
+    }
+    .progress-bar__fill { height: 100%; background: var(--color-primary); transition: width 0.3s ease; width: 0%; }
+
+    @media print {
+      .slide-nav, .progress-bar { display: none !important; }
+      body { background: white; }
+      .slides-container { display: block; overflow: visible; }
+      .slide {
+        position: relative !important; opacity: 1 !important;
+        transform: none !important; pointer-events: auto;
+        width: 100%; height: auto; aspect-ratio: 16 / 9; page-break-after: always;
+      }
+      @page { size: 1920px 1080px; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="slide-nav">
+    <span class="slide-counter"><span id="current">1</span> / <span id="total">1</span></span>
+    <button onclick="prevSlide()" aria-label="Previous">&#8249;</button>
+    <button onclick="nextSlide()" aria-label="Next">&#8250;</button>
+    <button onclick="toggleFullscreen()" aria-label="Fullscreen">&#x26F6;</button>
+  </nav>
+  <div class="progress-bar"><div class="progress-bar__fill" id="progress"></div></div>
+
+  <div class="slides-container">
+
+    <!-- ===== SLIDE: Line Chart ===== -->
+    <section class="slide active" id="slide-1">
+
+      <header class="slide-header">
+        <div class="slide-header__left">
+          <span class="section-badge">1</span>
+          <h1 class="slide-title">売上収益・営業利益推移</h1>
+        </div>
+      </header>
+
+      <div class="chart-container">
+        <div class="chart-subtitle">単位：億円（FY2022〜FY2026 四半期推移）</div>
+        <div class="chart-canvas-wrap">
+          <canvas id="chart-line"></canvas>
+        </div>
+      </div>
+
+      <footer class="slide-footer">
+        <div class="slide-footer__notes">
+          <p>1. 営業利益はIFRSベースのコア営業利益を表示</p>
+          <p>2. FY2026は1Q実績値</p>
+        </div>
+        <div class="slide-footer__page">6</div>
+      </footer>
+
+    </section>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+  <script>
+    Chart.register(ChartDataLabels);
+
+    var labels = ['1Q\nFY22', '2Q', '3Q', '4Q', '1Q\nFY23', '2Q', '3Q', '4Q', '1Q\nFY24', '2Q', '3Q', '4Q', '1Q\nFY25', '2Q', '3Q', '4Q', '1Q\nFY26'];
+    var revenueData = [320, 345, 360, 352, 380, 410, 425, 418, 442, 481, 484, 465, 449, 492, 499, 485, 568];
+    var profitData  = [28, 32, 35, 30, 38, 42, 48, 45, 47, 39, 47, 54, 40, 70, 88, 75, 109];
+
+    new Chart(document.getElementById('chart-line'), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: '売上収益',
+            data: revenueData,
+            borderColor: '#0652DD',
+            backgroundColor: 'rgba(6, 82, 221, 0.1)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointBackgroundColor: '#0652DD',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            borderWidth: 3
+          },
+          {
+            label: '営業利益',
+            data: profitData,
+            borderColor: '#FF4757',
+            backgroundColor: 'rgba(255, 71, 87, 0.08)',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 5,
+            pointBackgroundColor: '#FF4757',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            borderWidth: 3,
+            yAxisID: 'y1'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: { top: 32, bottom: 8, left: 4, right: 4 }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            align: 'end',
+            labels: {
+              font: { size: 14, family: 'system-ui', weight: 'bold' },
+              usePointStyle: true,
+              pointStyle: 'circle',
+              padding: 20
+            }
+          },
+          datalabels: {
+            display: function(ctx) {
+              return ctx.dataIndex === ctx.dataset.data.length - 1;
+            },
+            anchor: 'end',
+            align: 'top',
+            offset: 6,
+            font: { size: 14, weight: 'bold', family: 'system-ui' },
+            color: function(ctx) {
+              return ctx.datasetIndex === 0 ? '#0652DD' : '#FF4757';
+            },
+            formatter: function(value) { return value; }
+          }
+        },
+        scales: {
+          y: {
+            display: true,
+            beginAtZero: true,
+            position: 'left',
+            title: { display: true, text: '売上収益（億円）', font: { size: 12 }, color: '#6B7280' },
+            grid: { color: '#E5E7EB' },
+            ticks: { font: { size: 12 }, color: '#6B7280' }
+          },
+          y1: {
+            display: true,
+            beginAtZero: true,
+            position: 'right',
+            title: { display: true, text: '営業利益（億円）', font: { size: 12 }, color: '#6B7280' },
+            grid: { drawOnChartArea: false },
+            ticks: { font: { size: 12 }, color: '#6B7280' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { size: 11, family: 'system-ui' },
+              color: '#6B7280',
+              maxRotation: 0
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+  <script>
+    /* ===== Navigation ===== */
+    (function() {
+      var slides = document.querySelectorAll('.slide');
+      var total = slides.length;
+      var current = 0;
+      var currentEl = document.getElementById('current');
+      var totalEl = document.getElementById('total');
+      var progressEl = document.getElementById('progress');
+      if (totalEl) totalEl.textContent = total;
+
+      function goTo(index) {
+        if (index < 0 || index >= total) return;
+        slides[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        if (currentEl) currentEl.textContent = current + 1;
+        if (progressEl) progressEl.style.width = ((current + 1) / total * 100) + '%';
+        history.replaceState(null, '', '#' + (current + 1));
+      }
+      function next() { goTo(current + 1); }
+      function prev() { goTo(current - 1); }
+
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+            e.preventDefault(); next(); break;
+          case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+            e.preventDefault(); prev(); break;
+          case 'Home': goTo(0); break;
+          case 'End': goTo(total - 1); break;
+        }
+      });
+
+      var touchStartX = 0;
+      document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+      document.addEventListener('touchend', function(e) {
+        var diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); }
+      });
+
+      var wheelCooldown = false;
+      document.addEventListener('wheel', function(e) {
+        if (wheelCooldown) return;
+        wheelCooldown = true;
+        setTimeout(function() { wheelCooldown = false; }, 500);
+        e.deltaY > 0 ? next() : prev();
+      });
+
+      function updateScale() {
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        var scale = Math.min(vw / 1920, vh / 1080);
+        var offsetX = (vw - 1920 * scale) / 2;
+        var offsetY = (vh - 1080 * scale) / 2;
+        slides.forEach(function(s) {
+          s.style.transform = 'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(' + scale + ')';
+        });
+      }
+
+      window.addEventListener('load', function() {
+        var hash = parseInt(location.hash.slice(1));
+        goTo(isNaN(hash) ? 0 : hash - 1);
+        updateScale();
+      });
+      window.addEventListener('resize', updateScale);
+      window.prevSlide = prev;
+      window.nextSlide = next;
+      window.toggleFullscreen = function() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+      };
+    })();
+  </script>
+</body>
+</html>

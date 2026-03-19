@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Bullet + Visual Template</title>
+  <style>
+    :root {
+      --color-primary: #0652DD;
+      --color-primary-light: #E8EEFF;
+      --color-primary-dark: #003BB5;
+      --color-accent: #FF4757;
+      --color-accent-light: #FFE8EA;
+      --color-bg: #FFFFFF;
+      --color-bg-subtle: #F8F9FA;
+      --color-text: #1A1A1A;
+      --color-text-muted: #6B7280;
+      --color-border: #E5E7EB;
+      --font-heading: "Noto Sans JP", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --font-body: "Noto Sans JP", "Helvetica Neue", Arial, system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", "Fira Code", monospace;
+      --slide-width: 1920px;
+      --slide-height: 1080px;
+      --slide-padding: 120px;
+      --slide-padding-top: 100px;
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 24px;
+      --space-lg: 40px;
+      --space-xl: 64px;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-pill: 999px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow: hidden; width: 100%; height: 100%; background: #000; }
+
+    .slides-container {
+      width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    }
+
+    .slide {
+      width: var(--slide-width);
+      height: var(--slide-height);
+      padding: var(--slide-padding-top) var(--slide-padding) var(--slide-padding);
+      position: absolute; top: 0; left: 0;
+      background: var(--color-bg);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      transform-origin: top left;
+      overflow: hidden;
+      font-family: var(--font-body);
+      color: var(--color-text);
+    }
+    .slide.active { opacity: 1; pointer-events: auto; z-index: 1; }
+
+    /* ===== Header ===== */
+    .slide-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: var(--space-lg);
+    }
+    .slide-header__left { display: flex; align-items: center; gap: var(--space-sm); }
+    .section-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; background: var(--color-primary);
+      color: white; font-weight: 700; font-size: 20px;
+      border-radius: var(--radius-sm); flex-shrink: 0;
+    }
+    .slide-title {
+      font-family: var(--font-heading); font-size: 36px; font-weight: 800;
+      color: var(--color-text); line-height: 1.3;
+    }
+
+    /* ===== Bullet + Visual Layout ===== */
+    .bullet-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+
+    .bullet-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .bullet-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .bullet-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .bullet-content {
+      flex: 1;
+    }
+
+    .bullet-content__title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 4px;
+    }
+
+    .bullet-content__text {
+      font-size: 16px;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ===== Visual Card (Right Side) ===== */
+    .visual-card {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 480px;
+      text-align: center;
+    }
+
+    .visual-card__label {
+      font-size: 18px;
+      font-weight: 600;
+      opacity: 0.8;
+      margin-bottom: var(--space-sm);
+    }
+
+    .visual-card__value {
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: var(--space-xs);
+    }
+
+    .visual-card__unit {
+      font-size: 28px;
+      font-weight: 400;
+      opacity: 0.9;
+      margin-bottom: var(--space-lg);
+    }
+
+    .visual-card__divider {
+      width: 60px;
+      height: 3px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 2px;
+      margin-bottom: var(--space-lg);
+    }
+
+    .visual-card__sub {
+      font-size: 16px;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    .visual-card__sub strong {
+      font-weight: 700;
+      opacity: 1;
+    }
+
+    /* ===== Footer ===== */
+    .slide-footer {
+      position: absolute; bottom: 36px;
+      left: var(--slide-padding); right: var(--slide-padding);
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .slide-footer__notes { font-size: 11px; color: var(--color-text-muted); max-width: 80%; line-height: 1.5; }
+    .slide-footer__page { font-size: 14px; color: var(--color-text-muted); }
+
+    /* ===== Navigation ===== */
+    .slide-nav {
+      position: fixed; bottom: 20px; right: 20px;
+      display: flex; align-items: center; gap: 8px; z-index: 100;
+      background: rgba(0,0,0,0.6); padding: 8px 16px;
+      border-radius: var(--radius-pill); opacity: 0; transition: opacity 0.3s;
+    }
+    .slide-nav:hover { opacity: 1; }
+    .slide-nav button {
+      background: none; border: none; color: white;
+      font-size: 20px; cursor: pointer; padding: 4px 8px;
+    }
+    .slide-nav button:hover { background: rgba(255,255,255,0.2); border-radius: 4px; }
+    .slide-counter { color: white; font-size: 14px; font-family: var(--font-mono); }
+
+    .progress-bar {
+      position: fixed; bottom: 0; left: 0; width: 100%; height: 4px;
+      background: rgba(0,0,0,0.1); z-index: 100;
+    }
+    .progress-bar__fill { height: 100%; background: var(--color-primary); transition: width 0.3s ease; width: 0%; }
+
+    @media print {
+      .slide-nav, .progress-bar { display: none !important; }
+      body { background: white; }
+      .slides-container { display: block; overflow: visible; }
+      .slide {
+        position: relative !important; opacity: 1 !important;
+        transform: none !important; pointer-events: auto;
+        width: 100%; height: auto; aspect-ratio: 16 / 9; page-break-after: always;
+      }
+      @page { size: 1920px 1080px; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="slide-nav">
+    <span class="slide-counter"><span id="current">1</span> / <span id="total">1</span></span>
+    <button onclick="prevSlide()" aria-label="Previous">&#8249;</button>
+    <button onclick="nextSlide()" aria-label="Next">&#8250;</button>
+    <button onclick="toggleFullscreen()" aria-label="Fullscreen">&#x26F6;</button>
+  </nav>
+  <div class="progress-bar"><div class="progress-bar__fill" id="progress"></div></div>
+
+  <div class="slides-container">
+
+    <!-- ===== SLIDE: Bullet + Visual ===== -->
+    <section class="slide active" id="slide-1">
+
+      <header class="slide-header">
+        <div class="slide-header__left">
+          <span class="section-badge">1</span>
+          <h1 class="slide-title">成長戦略の重点施策</h1>
+        </div>
+      </header>
+
+      <div class="bullet-visual">
+
+        <!-- Left: Bullet List -->
+        <div class="bullet-list">
+
+          <div class="bullet-item">
+            <div class="bullet-icon">1</div>
+            <div class="bullet-content">
+              <div class="bullet-content__title">プロダクト強化</div>
+              <div class="bullet-content__text">AI活用による検索・レコメンド精度向上。パーソナライズ機能を全サービスに展開し、CVR 1.5倍を目指す。</div>
+            </div>
+          </div>
+
+          <div class="bullet-item">
+            <div class="bullet-icon">2</div>
+            <div class="bullet-content">
+              <div class="bullet-content__title">海外展開の加速</div>
+              <div class="bullet-content__text">北米市場でのブランド認知向上に注力。FY2027までに海外売上比率30%を目標に設定。</div>
+            </div>
+          </div>
+
+          <div class="bullet-item">
+            <div class="bullet-icon">3</div>
+            <div class="bullet-content">
+              <div class="bullet-content__title">フィンテック領域の拡大</div>
+              <div class="bullet-content__text">与信モデルの高度化とBNPL（後払い）サービスの拡充。決済取扱高2倍成長を計画。</div>
+            </div>
+          </div>
+
+          <div class="bullet-item">
+            <div class="bullet-icon">4</div>
+            <div class="bullet-content">
+              <div class="bullet-content__title">人材・組織投資</div>
+              <div class="bullet-content__text">エンジニア採用200名計画。グローバル人材の確保と開発生産性向上のための基盤投資を実施。</div>
+            </div>
+          </div>
+
+          <div class="bullet-item">
+            <div class="bullet-icon">5</div>
+            <div class="bullet-content">
+              <div class="bullet-content__title">サステナビリティ推進</div>
+              <div class="bullet-content__text">リユース市場拡大によるCO2削減貢献量の可視化。ESG評価の向上を推進。</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right: Visual Card -->
+        <div class="visual-card">
+          <div class="visual-card__label">FY2027 売上収益目標</div>
+          <div class="visual-card__value">3,000</div>
+          <div class="visual-card__unit">億円</div>
+          <div class="visual-card__divider"></div>
+          <div class="visual-card__sub">
+            FY2025実績比 <strong>+50%</strong> 成長<br>
+            営業利益率 <strong>15%</strong> 以上
+          </div>
+        </div>
+
+      </div>
+
+      <footer class="slide-footer">
+        <div class="slide-footer__notes">
+          <p>1. 目標値は中期経営計画（2025年5月発表）に基づく</p>
+        </div>
+        <div class="slide-footer__page">10</div>
+      </footer>
+
+    </section>
+
+  </div>
+
+  <script>
+    /* ===== Navigation ===== */
+    (function() {
+      var slides = document.querySelectorAll('.slide');
+      var total = slides.length;
+      var current = 0;
+      var currentEl = document.getElementById('current');
+      var totalEl = document.getElementById('total');
+      var progressEl = document.getElementById('progress');
+      if (totalEl) totalEl.textContent = total;
+
+      function goTo(index) {
+        if (index < 0 || index >= total) return;
+        slides[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        if (currentEl) currentEl.textContent = current + 1;
+        if (progressEl) progressEl.style.width = ((current + 1) / total * 100) + '%';
+        history.replaceState(null, '', '#' + (current + 1));
+      }
+      function next() { goTo(current + 1); }
+      function prev() { goTo(current - 1); }
+
+      document.addEventListener('keydown', function(e) {
+        switch(e.key) {
+          case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+            e.preventDefault(); next(); break;
+          case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+            e.preventDefault(); prev(); break;
+          case 'Home': goTo(0); break;
+          case 'End': goTo(total - 1); break;
+        }
+      });
+
+      var touchStartX = 0;
+      document.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; });
+      document.addEventListener('touchend', function(e) {
+        var diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); }
+      });
+
+      var wheelCooldown = false;
+      document.addEventListener('wheel', function(e) {
+        if (wheelCooldown) return;
+        wheelCooldown = true;
+        setTimeout(function() { wheelCooldown = false; }, 500);
+        e.deltaY > 0 ? next() : prev();
+      });
+
+      function updateScale() {
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        var scale = Math.min(vw / 1920, vh / 1080);
+        var offsetX = (vw - 1920 * scale) / 2;
+        var offsetY = (vh - 1080 * scale) / 2;
+        slides.forEach(function(s) {
+          s.style.transform = 'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(' + scale + ')';
+        });
+      }
+
+      window.addEventListener('load', function() {
+        var hash = parseInt(location.hash.slice(1));
+        goTo(isNaN(hash) ? 0 : hash - 1);
+        updateScale();
+      });
+      window.addEventListener('resize', updateScale);
+      window.prevSlide = prev;
+      window.nextSlide = next;
+      window.toggleFullscreen = function() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else document.exitFullscreen();
+      };
+    })();
+  </script>
+</body>
+</html>
